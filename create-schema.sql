@@ -48,76 +48,37 @@ GO
 
 CREATE VIEW dbo.vw_RiskOfReadmission_SubjectData AS
 	SELECT
-		admissions.PatientId,
-		admissions.AdmissionDate,
-		admissions.PatientAge,
-		admissions.PatientPostcode,
-		admissions.IsEmergencyAdmission,
-		MAX(CASE WHEN previous.IsEmergencyAdmission = 1 AND previous.AdmissionDate >= DATEADD(DAY, -30, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsEmergencyAdmissionLast30Days,
-		SUM(CASE WHEN previous.IsEmergencyAdmission = 1 AND previous.AdmissionDate >= DATEADD(MONTH, -12, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS NumberOfEmergencyAdmissionsLast12Months,
-		MAX(CASE WHEN previous.IsCongestiveHeartFailure = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfCongestiveHeartFailure,
-		MAX(CASE WHEN previous.IsPeripheralVascularDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfPeripheralVascularDisease,
-		MAX(CASE WHEN previous.IsDementia = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfDementia, 
-		MAX(CASE WHEN previous.IsChronicPulmonaryDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfChronicPulmonaryDisease,
-		MAX(CASE WHEN previous.IsOtherLiverDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfOtherLiverDisease,
-		MAX(CASE WHEN previous.IsOtherMalignantCancer = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfOtherMalignantCancer,
-		MAX(CASE WHEN previous.IsMetastaticCancerWithSolidTumour = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfMetastaticCancerWithSolidTumour,
-		MAX(CASE WHEN previous.IsModerateOrSevereLiverDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfModerateOrSevereLiverDisease,
-		MAX(CASE WHEN previous.IsDiabetesWithChronicComplications = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfDiabetesWithChronicComplications,
-		MAX(CASE WHEN previous.IsHemiplegiaOrParaplegia = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfHemiplegiaOrParaplegia,
-		MAX(CASE WHEN previous.IsRenalDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-			THEN 1
-			ELSE 0
-		END) AS IsHistoryOfRenalDisease
+		a.PatientId,
+		a.AdmissionDate,
+		a.PatientAge,
+		a.PatientPostcode,
+		a.IsEmergencyAdmission,
+		MAX(CASE WHEN prev.IsEmergencyAdmission = 1 AND prev.AdmissionDate >= DATEADD(DAY, -30, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsEmergencyAdmissionLast30Days,
+		SUM(CASE WHEN prev.IsEmergencyAdmission = 1 AND prev.AdmissionDate >= DATEADD(MONTH, -12, a.AdmissionDate) THEN 1 ELSE 0 END) AS NumberOfEmergencyAdmissionsLast12Months,
+		MAX(CASE WHEN prev.IsCongestiveHeartFailure = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfCongestiveHeartFailure,
+		MAX(CASE WHEN prev.IsPeripheralVascularDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfPeripheralVascularDisease,
+		MAX(CASE WHEN prev.IsDementia = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfDementia, 
+		MAX(CASE WHEN prev.IsChronicPulmonaryDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfChronicPulmonaryDisease,
+		MAX(CASE WHEN prev.IsOtherLiverDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfOtherLiverDisease,
+		MAX(CASE WHEN prev.IsOtherMalignantCancer = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfOtherMalignantCancer,
+		MAX(CASE WHEN prev.IsMetastaticCancerWithSolidTumour = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfMetastaticCancerWithSolidTumour,
+		MAX(CASE WHEN prev.IsModerateOrSevereLiverDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfModerateOrSevereLiverDisease,
+		MAX(CASE WHEN prev.IsDiabetesWithChronicComplications = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfDiabetesWithChronicComplications,
+		MAX(CASE WHEN prev.IsHemiplegiaOrParaplegia = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfHemiplegiaOrParaplegia,
+		MAX(CASE WHEN prev.IsRenalDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfRenalDisease
 	FROM 
-		dbo.HospitalAdmissions admissions
-		LEFT OUTER JOIN dbo.HospitalAdmissions previous
-			ON previous.PatientId = admissions.PatientId
-			AND previous.AdmissionDate < admissions.AdmissionDate
+		dbo.HospitalAdmissions a
+		LEFT OUTER JOIN dbo.HospitalAdmissions prev
+			ON prev.PatientId = a.PatientId
+			AND prev.AdmissionDate < a.AdmissionDate
 	WHERE 
-		admissions.DischargeDate IS NULL
+		a.DischargeDate IS NULL
 	GROUP BY 
-		admissions.PatientId,
-		admissions.AdmissionDate,
-		admissions.PatientAge,
-		admissions.PatientPostcode,
-		admissions.IsEmergencyAdmission;
+		a.PatientId,
+		a.AdmissionDate,
+		a.PatientAge,
+		a.PatientPostcode,
+		a.IsEmergencyAdmission;
 GO
 
 
@@ -127,83 +88,41 @@ GO
 CREATE VIEW dbo.vw_RiskOfReadmission_TrainingData AS
 	WITH history AS (
 		SELECT
-			admissions.PatientId,
-			admissions.AdmissionDate,
-			admissions.PatientAge,
-			admissions.PatientPostcode,
-			admissions.IsEmergencyAdmission,
-			MAX(CASE WHEN previous.IsEmergencyAdmission = 1 AND previous.AdmissionDate >= DATEADD(DAY, -30, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsEmergencyAdmissionLast30Days,
-			SUM(CASE WHEN previous.IsEmergencyAdmission = 1 AND previous.AdmissionDate >= DATEADD(MONTH, -12, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS NumberOfEmergencyAdmissionsLast12Months,
-			MAX(CASE WHEN previous.IsCongestiveHeartFailure = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfCongestiveHeartFailure,
-			MAX(CASE WHEN previous.IsPeripheralVascularDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfPeripheralVascularDisease,
-			MAX(CASE WHEN previous.IsDementia = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfDementia, 
-			MAX(CASE WHEN previous.IsChronicPulmonaryDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfChronicPulmonaryDisease,
-			MAX(CASE WHEN previous.IsOtherLiverDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfOtherLiverDisease,
-			MAX(CASE WHEN previous.IsOtherMalignantCancer = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfOtherMalignantCancer,
-			MAX(CASE WHEN previous.IsMetastaticCancerWithSolidTumour = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfMetastaticCancerWithSolidTumour,
-			MAX(CASE WHEN previous.IsModerateOrSevereLiverDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfModerateOrSevereLiverDisease,
-			MAX(CASE WHEN previous.IsDiabetesWithChronicComplications = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfDiabetesWithChronicComplications,
-			MAX(CASE WHEN previous.IsHemiplegiaOrParaplegia = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfHemiplegiaOrParaplegia,
-			MAX(CASE WHEN previous.IsRenalDisease = 1 AND previous.AdmissionDate >= DATEADD(YEAR, -2, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsHistoryOfRenalDisease,
-			MAX(CASE WHEN future.IsEmergencyAdmission = 1 AND future.AdmissionDate <= DATEADD(DAY, 30, admissions.AdmissionDate)
-				THEN 1
-				ELSE 0
-			END) AS IsEmergencyReadmissionWithin30Days
+			a.PatientId,
+			a.AdmissionDate,
+			a.PatientAge,
+			a.PatientPostcode,
+			a.IsEmergencyAdmission,
+			MAX(CASE WHEN prev.IsEmergencyAdmission = 1 AND prev.AdmissionDate >= DATEADD(DAY, -30, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsEmergencyAdmissionLast30Days,
+			SUM(CASE WHEN prev.IsEmergencyAdmission = 1 AND prev.AdmissionDate >= DATEADD(MONTH, -12, a.AdmissionDate) THEN 1 ELSE 0 END) AS NumberOfEmergencyAdmissionsLast12Months,
+			MAX(CASE WHEN prev.IsCongestiveHeartFailure = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfCongestiveHeartFailure,
+			MAX(CASE WHEN prev.IsPeripheralVascularDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfPeripheralVascularDisease,
+			MAX(CASE WHEN prev.IsDementia = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfDementia, 
+			MAX(CASE WHEN prev.IsChronicPulmonaryDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfChronicPulmonaryDisease,
+			MAX(CASE WHEN prev.IsOtherLiverDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfOtherLiverDisease,
+			MAX(CASE WHEN prev.IsOtherMalignantCancer = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfOtherMalignantCancer,
+			MAX(CASE WHEN prev.IsMetastaticCancerWithSolidTumour = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfMetastaticCancerWithSolidTumour,
+			MAX(CASE WHEN prev.IsModerateOrSevereLiverDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfModerateOrSevereLiverDisease,
+			MAX(CASE WHEN prev.IsDiabetesWithChronicComplications = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfDiabetesWithChronicComplications,
+			MAX(CASE WHEN prev.IsHemiplegiaOrParaplegia = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfHemiplegiaOrParaplegia,
+			MAX(CASE WHEN prev.IsRenalDisease = 1 AND prev.AdmissionDate >= DATEADD(YEAR, -2, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsHistoryOfRenalDisease,
+			MAX(CASE WHEN future.IsEmergencyAdmission = 1 AND future.AdmissionDate <= DATEADD(DAY, 30, a.AdmissionDate) THEN 1 ELSE 0 END) AS IsEmergencyReadmissionWithin30Days
 		FROM 
-			dbo.HospitalAdmissions admissions
-			LEFT OUTER JOIN dbo.HospitalAdmissions previous
-				ON previous.PatientId = admissions.PatientId
-				AND previous.AdmissionDate < admissions.AdmissionDate
+			dbo.HospitalAdmissions a
+			LEFT OUTER JOIN dbo.HospitalAdmissions prev
+				ON prev.PatientId = a.PatientId
+				AND prev.AdmissionDate < a.AdmissionDate
 			LEFT OUTER JOIN dbo.HospitalAdmissions future
-				ON future.PatientId = admissions.PatientId
-				AND future.AdmissionDate > admissions.AdmissionDate
+				ON future.PatientId = a.PatientId
+				AND future.AdmissionDate > a.AdmissionDate
 		WHERE 
-			admissions.DischargeDate IS NOT NULL
+			a.DischargeDate IS NOT NULL
 		GROUP BY 
-			admissions.PatientId,
-			admissions.AdmissionDate,
-			admissions.PatientAge,
-			admissions.PatientPostcode,
-			admissions.IsEmergencyAdmission
+			a.PatientId,
+			a.AdmissionDate,
+			a.PatientAge,
+			a.PatientPostcode,
+			a.IsEmergencyAdmission
 	)
 	SELECT TOP(500) * 
 	FROM history 
@@ -217,5 +136,5 @@ CREATE VIEW dbo.vw_RiskOfReadmission_TrainingData AS
 	FROM history
 	WHERE 
 		IsEmergencyReadmissionWithin30Days = 0
-		AND PatientPostcode IN (SELECT DISTINCT PatientPostcode FROM dbo.vw_RiskOfReadmission_SubjectData)
+		AND PatientPostcode IN (SELECT DISTINCT PatientPostcode FROM dbo.vw_RiskOfReadmission_SubjectData);
 GO
