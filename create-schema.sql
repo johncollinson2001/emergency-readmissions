@@ -14,8 +14,6 @@
  * vw_RiskOfReadmission_TrainingData (View):
  * Queries known emergency readmissions which can be used for machine learning training.
  *
- * TODO: user
- *
  **************************************************************************************/
 
 DROP TABLE IF EXISTS dbo.HospitalAdmissions;

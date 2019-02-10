@@ -5,7 +5,7 @@
  * which are randomly generated with various biases in order to simulate a real world
  * population demographic.
  *
- * The script handles a set number of current patients based on the capacity of the 
+ * The script handles a set number of current patients based on the bed capacity of the 
  * hospital.
  *
  **************************************************************************************/
